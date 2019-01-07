@@ -1,6 +1,6 @@
 # x-yt
 
-> batch download for test in MAC & WIN
+> batch download for test in MAC & WIN
 
 for MAC
 ------
