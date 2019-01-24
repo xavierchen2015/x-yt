@@ -4,6 +4,7 @@ import (
    "github.com/rylio/ytdl"
    "github.com/spf13/viper"
 
+   "strings"
    "os"
    "bufio"
    "fmt"
@@ -13,9 +14,9 @@ import (
 )
 
 func main() {
-   
+
    //// use viper get config file
-   
+
    viper.SetConfigType("yaml")
    viper.SetConfigName("x")
    viper.AddConfigPath(".")
@@ -25,7 +26,7 @@ func main() {
    }
 
    var dir = ""
-   
+
    //// win & mac current path different, use GOOS defind OS, then get dir for each
    //// win -> exe work dir
    //// mac -> x.yaml path
@@ -38,31 +39,33 @@ func main() {
        os.Chdir(path)
        dir = path
    }
-   
+
    fmt.Println(dir)
- 
+
    currentPath := filepath.Join(dir, "file.txt")
    file, err := os.Open(currentPath)
-   
+
    if err != nil {
       log.Fatal(err)
    }
    defer file.Close()
 
    //// open txt file loop get youtube url
-   
+
    scanner := bufio.NewScanner(file)
    for scanner.Scan() {
       url := scanner.Text()
 
-      //// lib api get youtube info  
+      //// lib api get youtube info
       videoInfo, _ := ytdl.GetVideoInfo(url)
-       
-      loadfile := videoInfo.Title + ".mp4"
+
+
+      videotitle := strings.Replace(videoInfo.Title, "/", "", -1)
+      loadfile := videotitle + ".mp4"
       downloadPath := filepath.Join(dir, loadfile)
-      
+
       fmt.Println(videoInfo.Title)
- 
+
       file2, _ := os.Create(downloadPath)
       defer file2.Close()
 
